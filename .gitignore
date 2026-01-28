@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment
+.env
+
+# Logs
+*.log
+logs/
+
+# Reports
+generated_reports/
+temp_files/
+
+# ML Models
+models_cache/
+*.pkl
+*.joblib
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Documents
+uploads/
+test_contracts/

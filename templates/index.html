@@ -1,0 +1,448 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="AI-powered contract clause detection, extraction and analysis system" />
+  <title>Clause Detection | AI Contract Analysis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/styles.css?v=1.1" />
+  <!-- Chart.js for Dashboard -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="bg-3d">
+    <!-- Gradient Orbs -->
+    <div class="shape cube"></div>
+    <div class="shape sphere"></div>
+    <div class="shape ring"></div>
+    <div class="shape triangle"></div>
+    <div class="shape cube"></div>
+    <div class="shape sphere"></div>
+    <div class="shape ring"></div>
+    <div class="shape triangle"></div>
+    
+    <!-- Floating Particles -->
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="topbar">
+    <div class="container">
+      <div class="brand">
+        <div class="logo">CD</div>
+        <div>
+          <div class="title" data-i18n="app_title">Clause Detection</div>
+          <div class="subtitle" data-i18n="app_subtitle">AI-Powered Contract Analysis</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <!-- Settings Button -->
+        <button class="theme-toggle" id="settingsBtn" title="Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+        <!-- Logout Button -->
+        <a href="/logout" class="theme-toggle" title="Logout" style="text-decoration: none;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+            <line x1="12" y1="2" x2="12" y2="12"></line>
+          </svg>
+        </a>
+        <!-- Status Badge -->
+        <div class="status" id="healthStatus">
+          <span>Checking API…</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Settings Modal -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="card modal-content">
+      <div class="row space" style="margin-bottom: 24px;">
+        <h2 data-i18n="settings_title">Settings</h2>
+        <button class="theme-toggle" id="closeSettings" style="width: 36px; height: 36px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <div class="settings-group">
+        <label>
+          <span data-i18n="appearance">Appearance</span>
+          <div class="theme-options">
+            <button class="theme-option active" data-theme-choice="dark">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+              <span data-i18n="theme_dark">Dark</span>
+            </button>
+            <button class="theme-option" data-theme-choice="light">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="5"></circle>
+                <line x1="12" y1="1" x2="12" y2="3"></line>
+                <line x1="12" y1="21" x2="12" y2="23"></line>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                <line x1="1" y1="12" x2="3" y2="12"></line>
+                <line x1="21" y1="12" x2="23" y2="12"></line>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+              </svg>
+              <span data-i18n="theme_light">Light</span>
+            </button>
+          </div>
+        </label>
+      </div>
+
+      <div class="settings-group" style="margin-top: 24px;">
+        <label>
+          <span data-i18n="language_pref">Language Preference</span>
+          <select id="languageSelect">
+            <option value="en">English (default)</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+            <option value="hi">Hindi</option>
+          </select>
+          <p class="muted" style="margin-top: 8px; font-size: 11px;" data-i18n="language_desc">Preferred language for UI and extraction highlights.</p>
+        </label>
+      </div>
+
+      <div class="row" style="margin-top: 32px; justify-content: flex-end;">
+        <button class="btn" id="saveSettings" data-i18n="save_changes">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clause Fixer Modal -->
+  <div class="modal-overlay" id="fixerModal">
+    <div class="card modal-content" style="max-width: 800px;">
+      <div class="row space" style="margin-bottom: 24px;">
+        <h2 id="fixerTitle"> ✨ AI Clause Optimizer</h2>
+        <button class="theme-toggle" id="closeFixer" style="width: 36px; height: 36px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="grid">
+        <div class="card inner" style="margin-top: 0;">
+          <h3 data-i18n="original_clause">Original Clause</h3>
+          <div class="pre" id="originalClauseText" style="opacity: 0.7;"></div>
+        </div>
+        <div class="card inner" style="margin-top: 0; border-color: var(--accent-green);">
+          <h3 style="color: var(--accent-green);">Optimized Suggestion</h3>
+          <div class="pre" id="suggestedClauseText" style="border-left: 4px solid var(--accent-green); background: rgba(16, 185, 129, 0.05);"></div>
+        </div>
+      </div>
+      <div class="card inner" style="margin-top: 20px; border: 1px dashed var(--accent-blue);">
+        <h4 style="font-size: 13px; color: var(--accent-blue); text-transform: uppercase;">AI Rationale</h4>
+        <p id="fixRationale" style="font-size: 14px; margin-top: 8px;"></p>
+      </div>
+      <div class="row" style="margin-top: 32px; justify-content: flex-end;">
+        <button class="btn secondary" id="copyFixBtn">Copy Suggestion</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Time Machine Modal -->
+  <div class="modal-overlay" id="historyModal">
+    <div class="card modal-content" style="max-width: 900px; height: 80vh; display: flex; flex-direction: column;">
+      <div class="row space" style="margin-bottom: 24px; flex-shrink: 0;">
+        <h2> ⏳ Amendment Time Machine</h2>
+        <button class="theme-toggle" id="closeHistory" style="width: 36px; height: 36px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="timeline-container" style="flex: 1; overflow-y: auto;">
+        <div id="contractTimeline" class="list"></div>
+        <div id="diffView" style="display: none; margin-top: 30px;">
+          <button class="btn secondary" id="backToTimeline" style="margin-bottom: 15px;"> ← Back to Timeline</button>
+          <h3 id="diffTitle">Comparison View</h3>
+          <div id="diffResults" class="list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+    <!-- Welcome / Features Banner (New) -->
+    <section class="card" id="welcomeBanner" style="background: var(--gradient-primary); color: var(--bg-primary); border: none;">
+      <div class="row space">
+        <div>
+          <h1 style="font-size: 32px; font-weight: 800; margin-bottom: 8px;">Professional Legal AI Workspace</h1>
+          <p style="opacity: 0.9; font-weight: 500;">Detect risks, analyze history, and optimize clauses in seconds.</p>
+        </div>
+        <div class="pill" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid rgba(255,255,255,0.3);">v2.0 Premium</div>
+      </div>
+      <div class="grid" style="margin-top: 30px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: var(--radius-md);">
+          <div style="font-size: 20px; margin-bottom: 5px;">📊</div>
+          <strong>Health Dashboard</strong>
+          <p style="font-size: 11px; opacity: 0.8; margin-top: 5px;">Visual risk profiles & health scores.</p>
+        </div>
+        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: var(--radius-md);">
+          <div style="font-size: 20px; margin-bottom: 5px;">🕰️</div>
+          <strong>Time Machine</strong>
+          <p style="font-size: 11px; opacity: 0.8; margin-top: 5px;">Track amendments & visualize changes.</p>
+        </div>
+        <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: var(--radius-md);">
+          <div style="font-size: 20px; margin-bottom: 5px;">✨</div>
+          <strong>AI Clause Fixer</strong>
+          <p style="font-size: 11px; opacity: 0.8; margin-top: 5px;">One-click optimization for high-risk terms.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section class="card" id="dashboardSection" style="display:none;">
+      <div class="row space">
+        <h2 data-i18n="dashboard_title">Contract Insights</h2>
+        <div class="pill" id="dashboardContractName">Selecting contract...</div>
+      </div>
+      <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top: 20px;">
+        <div class="card inner" style="margin-top: 0;">
+          <h3 style="text-align: center;">Risk Profile</h3>
+          <div style="height: 250px; position: relative;">
+            <canvas id="riskChart"></canvas>
+          </div>
+        </div>
+        <div class="card inner" style="margin-top: 0;">
+          <h3 style="text-align: center;">Clause Composition</h3>
+          <div style="height: 250px; position: relative;">
+            <canvas id="typeChart"></canvas>
+          </div>
+        </div>
+        <div class="card inner" style="margin-top: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <h3 style="text-align: center;">Health Score</h3>
+          <div class="health-score-outer">
+            <div class="health-score-container" id="healthScoreContainer">
+              <div class="health-score-value" id="healthScoreValue">--</div>
+              <div class="health-score-label">Compliance Rank</div>
+            </div>
+            <svg class="health-progress-svg" width="180" height="180">
+              <circle class="health-progress-bg" cx="90" cy="90" r="80" />
+              <circle class="health-progress-bar" id="healthProgressBar" cx="90" cy="90" r="80" />
+            </svg>
+          </div>
+          <p class="muted" style="text-align: center; margin-top: 15px; font-size: 12px;" id="healthScoreDesc">Based on detected high-risk clauses and ambiguities.</p>
+        </div>
+      </div>
+
+      <!-- Risk Breakdown (New) -->
+      <div class="card inner" style="margin-top: 20px; border-left: 4px solid var(--accent-red);">
+        <h3 style="margin-bottom: 20px;">Risk Profile Summary</h3>
+        <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));">
+          <div class="risk-stat-card critical">
+            <div class="risk-stat-icon">🔥</div>
+            <div class="risk-stat-content">
+              <div class="risk-stat-value" id="criticalCount">0</div>
+              <div class="risk-stat-label">Critical Risks</div>
+            </div>
+          </div>
+          <div class="risk-stat-card high">
+            <div class="risk-stat-icon">⚠️</div>
+            <div class="risk-stat-content">
+              <div class="risk-stat-value" id="highCount">0</div>
+              <div class="risk-stat-label">High Risks</div>
+            </div>
+          </div>
+          <div class="risk-stat-card medium">
+            <div class="risk-stat-icon">⚡</div>
+            <div class="risk-stat-content">
+              <div class="risk-stat-value" id="mediumCount">0</div>
+              <div class="risk-stat-label">Medium Risks</div>
+            </div>
+          </div>
+          <div class="risk-stat-card low">
+            <div class="risk-stat-icon">✅</div>
+            <div class="risk-stat-content">
+              <div class="risk-stat-value" id="lowCount">0</div>
+              <div class="risk-stat-label">Low Risks/Neutral</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Upload Section -->
+    <section class="card">
+      <h2 data-i18n="upload_section_title">Upload Contract</h2>
+      <form id="uploadForm">
+        <div class="grid">
+          <label>
+            <span data-i18n="label_select_file">Select File</span>
+            <input type="file" id="file" name="file" accept=".pdf,.docx,.txt" required />
+          </label>
+          <label>
+            <span data-i18n="label_contract_name">Contract Name</span>
+            <input type="text" id="name" name="name" placeholder="e.g., Service Agreement 2024" />
+          </label>
+          <label>
+            <span data-i18n="label_version">Version</span>
+            <input type="text" id="version" name="version" value="1.0" placeholder="1.0" />
+          </label>
+          <label>
+            <span data-i18n="label_is_amendment">Is Amendment?</span>
+            <select id="is_amendment" name="is_amendment">
+              <option value="false" selected data-i18n="amendment_no">No - Original Contract</option>
+              <option value="true" data-i18n="amendment_yes">Yes - Amendment</option>
+            </select>
+          </label>
+          <label class="wide">
+            <span data-i18n="label_parent_id">Parent Contract ID (for amendments)</span>
+            <input type="number" id="parent_contract_id" name="parent_contract_id" placeholder="Enter parent contract ID if this is an amendment" />
+          </label>
+        </div>
+        <div class="row">
+          <button type="submit" class="btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17,8 12,3 7,8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            <span data-i18n="btn_upload">Upload & Process</span>
+          </button>
+          <span class="muted" id="uploadMsg"></span>
+        </div>
+      </form>
+    </section>
+
+    <!-- Contracts List Section -->
+    <section class="card">
+      <div class="row space">
+        <h2 data-i18n="contracts_section_title">Your Contracts</h2>
+        <button class="btn secondary" id="refreshContracts">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 2v6h-6"/>
+            <path d="M3 12a9 9 0 0 1 15-6.7L21 8"/>
+            <path d="M3 22v-6h6"/>
+            <path d="M21 12a9 9 0 0 1-15 6.7L3 16"/>
+          </svg>
+          <span data-i18n="btn_refresh">Refresh</span>
+        </button>
+      </div>
+      <div id="contractsList" class="list">
+        <div class="item muted" style="text-align:center;padding:32px;">
+          <span data-i18n="no_contracts">No contracts uploaded yet. Upload your first contract above!</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Q&A Section -->
+    <section class="card">
+      <h2 data-i18n="ask_section_title">Ask a Question</h2>
+      <form id="askForm">
+        <div class="grid">
+          <label>
+            <span data-i18n="label_contract_id">Contract ID</span>
+            <input type="number" id="askContractId" placeholder="Enter contract ID from list above" required />
+          </label>
+          <label class="wide">
+            <span data-i18n="label_question">Your Question</span>
+            <input type="text" id="question" placeholder="e.g., What are the termination conditions? What is the liability clause?" required />
+          </label>
+        </div>
+        <div class="row">
+          <button type="submit" class="btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <span data-i18n="btn_ask">Ask AI</span>
+          </button>
+          <span class="muted" id="askMsg"></span>
+        </div>
+      </form>
+
+      <!-- Answer Display -->
+      <div class="card inner" id="answerCard" style="display:none;">
+        <div class="row space" style="margin-bottom:16px;">
+          <h3 data-i18n="answer_title">AI Answer</h3>
+          <div class="pill" id="confidence">Confidence: --</div>
+        </div>
+        <pre class="pre" id="answer"></pre>
+        
+        <h3 style="margin-top:24px;" data-i18n="evidence_title">Supporting Evidence</h3>
+        <div id="evidence" class="list"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <span class="muted" data-i18n="footer_tip">
+        💡 Tip: For best results, upload contracts in PDF, DOCX, or TXT format. The AI analyzes clauses and can answer questions about obligations, risks, and terms.
+      </span>
+    </div>
+  </footer>
+
+  <!-- Chatbot Widget -->
+  <div class="chatbot-container" id="chatbot">
+    <button class="chatbot-trigger" id="chatTrigger" title="AI Assistant">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+    </button>
+    <div class="chatbot-window card" id="chatWindow">
+      <div class="chat-header">
+        <div class="row" style="gap: 10px;">
+          <div class="logo" style="width:30px; height:30px; font-size:12px;">AI</div>
+          <div>
+            <div class="chat-title" data-i18n="chat_assistant">Legal Assistant</div>
+            <div class="chat-subtitle" data-i18n="chat_online">Online</div>
+          </div>
+        </div>
+        <button class="theme-toggle" id="closeChat" style="width:30px; height:30px; border:none; background:transparent;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="message system">
+          <span data-i18n="chat_welcome">Hello! I'm your AI contract assistant. Select a contract and ask me anything about its clauses.</span>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <div class="chat-input-row">
+          <input type="text" id="chatInput" data-i18n-placeholder="chat_placeholder" placeholder="Ask about clauses..." />
+          <button id="sendChat" class="btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="22" y1="2" x2="11" y2="13"></line>
+              <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js?v=1.1"></script>
+</body>
+</html>

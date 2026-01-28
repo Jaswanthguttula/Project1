@@ -1,0 +1,114 @@
+"""Sample Service Agreement for Testing
+
+SERVICE AGREEMENT
+
+This Service Agreement ("Agreement") is entered into as of January 1, 2025 ("Effective Date")
+between TechCorp Inc. ("Provider") and ClientCo LLC ("Client").
+
+1. SERVICES
+
+1.1 Scope of Services
+The Provider shall provide software development services as described in Exhibit A. The Provider
+will use commercially reasonable efforts to complete the services in a timely manner.
+
+1.2 Service Levels
+Provider shall maintain system availability of approximately 99% uptime, excluding scheduled
+maintenance periods.
+
+2. PAYMENT TERMS
+
+2.1 Fees
+Client shall pay Provider a monthly fee as specified in the payment schedule. Payment is due
+within 30 days of invoice date.
+
+2.2 Late Payment
+Late payments shall accrue interest at a rate of 1.5% per month or the maximum rate permitted
+by law, whichever is lower.
+
+3. TERM AND TERMINATION
+
+3.1 Initial Term
+This Agreement shall commence on the Effective Date and continue for an initial term of twelve
+(12) months.
+
+3.2 Termination for Cause
+Either party may terminate this Agreement immediately upon written notice if the other party
+materially breaches any provision of this Agreement and fails to cure such breach within thirty
+(30) days of receiving written notice.
+
+3.3 Effect of Termination
+Upon termination, Client shall pay all outstanding fees for services rendered up to the
+termination date.
+
+4. CONFIDENTIALITY
+
+4.1 Confidential Information
+Each party agrees to maintain the confidentiality of the other party's proprietary and
+confidential information. Confidential information shall not be disclosed to third parties
+without prior written consent.
+
+4.2 Exceptions
+The confidentiality obligations shall not apply to information that is publicly available
+or independently developed.
+
+5. LIABILITY AND INDEMNIFICATION
+
+5.1 Limitation of Liability
+Provider's total liability under this Agreement shall not exceed the total fees paid by Client
+in the twelve (12) months preceding the claim. In no event shall Provider be liable for
+indirect, incidental, or consequential damages.
+
+5.2 Indemnification
+Provider shall indemnify and hold harmless Client from any claims arising from Provider's
+breach of this Agreement or negligent acts.
+
+6. INTELLECTUAL PROPERTY
+
+6.1 Ownership
+All deliverables created by Provider under this Agreement shall become the property of Client
+upon full payment of fees.
+
+6.2 Provider Tools
+Provider retains all rights to its pre-existing tools, methodologies, and frameworks used
+in providing the services.
+
+7. WARRANTIES
+
+7.1 Provider Warranties
+Provider warrants that services will be performed in a professional and workmanlike manner
+consistent with industry standards.
+
+7.2 Disclaimer
+EXCEPT AS EXPRESSLY PROVIDED HEREIN, PROVIDER MAKES NO OTHER WARRANTIES, EXPRESS OR IMPLIED,
+INCLUDING WARRANTIES OF MERCHANTABILITY OR FITNESS FOR A PARTICULAR PURPOSE.
+
+8. DISPUTE RESOLUTION
+
+8.1 Negotiation
+The parties shall attempt to resolve disputes through good faith negotiation.
+
+8.2 Arbitration
+If negotiation fails, disputes shall be resolved through binding arbitration in accordance
+with the rules of the American Arbitration Association.
+
+9. GENERAL PROVISIONS
+
+9.1 Force Majeure
+Neither party shall be liable for delays caused by circumstances beyond their reasonable control,
+including acts of God, war, or natural disasters.
+
+9.2 Amendment
+This Agreement may only be amended in writing signed by authorized representatives of both parties.
+
+9.3 Governing Law
+This Agreement shall be governed by the laws of the State of California.
+
+9.4 Entire Agreement
+This Agreement constitutes the entire agreement between the parties and supersedes all prior
+agreements and understandings.
+
+
+IN WITNESS WHEREOF, the parties have executed this Agreement as of the Effective Date.
+
+PROVIDER: TechCorp Inc.
+CLIENT: ClientCo LLC
