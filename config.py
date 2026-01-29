@@ -20,7 +20,9 @@ class Config:
 
     # Database
     IS_VERCEL = os.environ.get("VERCEL") == "1"
-    DEFAULT_DB = "sqlite:////tmp/contracts.db" if IS_VERCEL else "sqlite:///./contracts.db"
+    DEFAULT_DB = (
+        "sqlite:////tmp/contracts.db" if IS_VERCEL else "sqlite:///./contracts.db"
+    )
     DATABASE_URL = os.getenv("DATABASE_URL", DEFAULT_DB)
 
     # Security
@@ -28,7 +30,8 @@ class Config:
 
     # API
     API_HOST = os.getenv("API_HOST", "0.0.0.0")
-    API_PORT = int(os.getenv("API_PORT", 5000))
+    # Prefer platform-provided PORT when available (Heroku/Render/Fly/etc.)
+    API_PORT = int(os.getenv("PORT", os.getenv("API_PORT", 5000)))
     # Default to non-debug for a cleaner, more stable "launch" experience.
     DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
@@ -49,7 +52,7 @@ class Config:
     # Directories
     # On Vercel, we must use /tmp for any writable operations
     IS_VERCEL = os.environ.get("VERCEL") == "1"
-    
+
     BASE_DIR = "/tmp" if IS_VERCEL else "."
     UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
     REPORTS_FOLDER = os.path.join(BASE_DIR, "generated_reports")
