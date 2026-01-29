@@ -3,9 +3,24 @@ Main Flask API Application - Vercel Optimized
 """
 
 import os
-from flask import Flask, request, jsonify, send_file, render_template, redirect, url_for, flash
+from flask import (
+    Flask,
+    request,
+    jsonify,
+    send_file,
+    render_template,
+    redirect,
+    url_for,
+    flash,
+)
 from flask_cors import CORS
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_login import (
+    LoginManager,
+    login_user,
+    logout_user,
+    login_required,
+    current_user,
+)
 from werkzeug.utils import secure_filename
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
@@ -24,9 +39,9 @@ from workflows import ReviewWorkflow
 from reports import AuditReportGenerator
 
 # Initialize Flask app
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static", static_url_path="/static")
 app.config.from_object(Config)
-app.secret_key = Config.SECRET_KEY # Ensure secret key is explicitly set
+app.secret_key = Config.SECRET_KEY  # Ensure secret key is explicitly set
 CORS(app)
 
 # Initialize directories
@@ -40,6 +55,7 @@ except Exception as e:
     # In Vercel, we might not have write access to create a local SQLite file.
     # We create a dummy engine to allow the app to boot (e.g., for static pages).
     from sqlalchemy import create_engine
+
     engine = create_engine("sqlite:///:memory:")
 
 # Initialize login manager
@@ -522,23 +538,35 @@ def get_contract_history(contract_id):
         # Find the root contract (the original)
         root = current
         while root.parent_contract_id:
-            parent = session.query(Contract).filter_by(id=root.parent_contract_id).first()
-            if not parent or parent.id == root.id: # Prevent infinite cycles
+            parent = (
+                session.query(Contract).filter_by(id=root.parent_contract_id).first()
+            )
+            if not parent or parent.id == root.id:  # Prevent infinite cycles
                 break
             root = parent
 
         # Traverse down from root to find all amendments in order
         history = []
+
         def traverse(node):
-            history.append({
-                "id": node.id,
-                "name": node.name,
-                "version": node.version,
-                "is_amendment": node.is_amendment,
-                "created_at": node.created_at.isoformat() if node.created_at else None,
-                "clause_count": len(node.clauses)
-            })
-            children = session.query(Contract).filter_by(parent_contract_id=node.id).order_by(Contract.id).all()
+            history.append(
+                {
+                    "id": node.id,
+                    "name": node.name,
+                    "version": node.version,
+                    "is_amendment": node.is_amendment,
+                    "created_at": node.created_at.isoformat()
+                    if node.created_at
+                    else None,
+                    "clause_count": len(node.clauses),
+                }
+            )
+            children = (
+                session.query(Contract)
+                .filter_by(parent_contract_id=node.id)
+                .order_by(Contract.id)
+                .all()
+            )
             for child in children:
                 traverse(child)
 
@@ -547,6 +575,7 @@ def get_contract_history(contract_id):
     finally:
         session.close()
 
+
 @app.route("/api/contracts/compare/<int:id1>/<int:id2>", methods=["GET"])
 @login_required
 def compare_contracts(id1, id2):
@@ -554,6 +583,7 @@ def compare_contracts(id1, id2):
     session = get_session(engine)
     try:
         import difflib
+
         c1 = session.query(Contract).filter_by(id=id1).first()
         c2 = session.query(Contract).filter_by(id=id2).first()
         if not c1 or not c2:
@@ -575,25 +605,35 @@ def compare_contracts(id1, id2):
                 d = difflib.ndiff(t1.split(), t2.split())
                 diff_html = []
                 for word in d:
-                    if word.startswith("+ "): diff_html.append(f"<ins>{word[2:]}</ins>")
-                    elif word.startswith("- "): diff_html.append(f"<del>{word[2:]}</del>")
-                    elif word.startswith("  "): diff_html.append(word[2:])
-                
-                diffs.append({
-                    "path": path,
-                    "status": "added" if not t1 else ("removed" if not t2 else "modified"),
-                    "old_text": t1,
-                    "new_text": t2,
-                    "diff_visual": " ".join(diff_html)
-                })
+                    if word.startswith("+ "):
+                        diff_html.append(f"<ins>{word[2:]}</ins>")
+                    elif word.startswith("- "):
+                        diff_html.append(f"<del>{word[2:]}</del>")
+                    elif word.startswith("  "):
+                        diff_html.append(word[2:])
 
-        return jsonify({
-            "contract1": {"id": c1.id, "name": c1.name},
-            "contract2": {"id": c2.id, "name": c2.name},
-            "changes": diffs
-        }), 200
+                diffs.append(
+                    {
+                        "path": path,
+                        "status": "added"
+                        if not t1
+                        else ("removed" if not t2 else "modified"),
+                        "old_text": t1,
+                        "new_text": t2,
+                        "diff_visual": " ".join(diff_html),
+                    }
+                )
+
+        return jsonify(
+            {
+                "contract1": {"id": c1.id, "name": c1.name},
+                "contract2": {"id": c2.id, "name": c2.name},
+                "changes": diffs,
+            }
+        ), 200
     finally:
         session.close()
+
 
 @app.route("/api/clauses/<int:clause_id>/fix", methods=["POST"])
 @login_required
@@ -602,6 +642,7 @@ def fix_clause(clause_id):
     session = get_session(engine)
     try:
         from models.database import Clause, ClauseType
+
         clause = session.query(Clause).filter_by(id=clause_id).first()
         if not clause:
             return jsonify({"error": "Clause not found"}), 404
@@ -613,26 +654,41 @@ def fix_clause(clause_id):
         # Simple rule-based fixer for demonstration
         # In a real app, this would call an LLM with a specific prompt
         if clause.clause_type == ClauseType.LIABILITY:
-            suggestion = original_text + " Notwithstanding the foregoing, the total liability of either party shall not exceed the total amount paid under this agreement in the twelve (12) months preceding the claim."
-            rationale = "Added a liability cap to mitigate high-risk unlimited exposure."
+            suggestion = (
+                original_text
+                + " Notwithstanding the foregoing, the total liability of either party shall not exceed the total amount paid under this agreement in the twelve (12) months preceding the claim."
+            )
+            rationale = (
+                "Added a liability cap to mitigate high-risk unlimited exposure."
+            )
         elif clause.clause_type == ClauseType.TERMINATION:
-            suggestion = original_text + " Either party may terminate this agreement for convenience upon thirty (30) days prior written notice."
-            rationale = "Added a termination for convenience right to provide exit flexibility."
+            suggestion = (
+                original_text
+                + " Either party may terminate this agreement for convenience upon thirty (30) days prior written notice."
+            )
+            rationale = (
+                "Added a termination for convenience right to provide exit flexibility."
+            )
         elif "reasonable" in original_text.lower():
             suggestion = original_text.replace("reasonable", "defined and objective")
             rationale = "Replaced subjective 'reasonable' with objective criteria to reduce ambiguity."
         else:
             suggestion = "REVISED: " + original_text.replace("shall", "will")
-            rationale = "Simplified language for better clarity and modern legal standards."
+            rationale = (
+                "Simplified language for better clarity and modern legal standards."
+            )
 
-        return jsonify({
-            "original": original_text,
-            "suggestion": suggestion,
-            "rationale": rationale,
-            "clause_type": clause.clause_type.value
-        }), 200
+        return jsonify(
+            {
+                "original": original_text,
+                "suggestion": suggestion,
+                "rationale": rationale,
+                "clause_type": clause.clause_type.value,
+            }
+        ), 200
     finally:
         session.close()
+
 
 if __name__ == "__main__":
     # Internal server loop for local development
@@ -642,6 +698,7 @@ if __name__ == "__main__":
 
     try:
         from waitress import serve
+
         print("Serving with waitress...")
         serve(app, host=host, port=port)
     except ImportError:
